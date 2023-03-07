@@ -7,7 +7,7 @@ export default class ProductManager{
             const newProd = await productsModels.create(prod)
             return newProd
         } catch (error) {
-            return error
+            return console.log(error)
         }
     }
 
@@ -16,7 +16,8 @@ export default class ProductManager{
             const options = {
                 page: page,
                 limit: limit,
-                sort: sort ? {price: sort} : {}
+                sort: sort ? {price: sort} : {},
+                lean: true
             }
             const prodPag = await productsModels.paginate(query, options)
             const prodsPag = 
@@ -42,7 +43,7 @@ export default class ProductManager{
 
     async getProductsById(id){
         try {
-            const prodByIdDB = await productsModels.findById(id)
+            const prodByIdDB = await productsModels.find({_id:id})
             return prodByIdDB
         } catch (error) {
             return error

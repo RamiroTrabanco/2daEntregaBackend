@@ -15,7 +15,7 @@ export default class CartManager{
 
     async getCartsById(id){
         try {
-            const cartById = await cartsModel.findById(id).populate("products")
+            const cartById = await cartsModel.findById(id)
             return cartById
         } catch (error) {
             return error
@@ -31,36 +31,82 @@ export default class CartManager{
         }
     }
 
-    async addProductToCart(cartId, prodId){
-    try {
-        const cartById = await cartsModel.findById(cartId)
-        const prodById = await productManager.getProductsById(prodId)
-        const newProdToCart = {
-            id: prodById.id,
-            quantity: 1
+    /* async addProductToCart(cartId, prodId){
+        try {
+            const cartById = await cartsModel.findById(cartId)
+            const prodById = await productManager.getProductsById(prodId)
+            console.log(cartById)
+            console.log(prodById)
+           if(prodById){ 
+                let newProdToCart = {
+                pid: prodId,
+                quantity: 1
+            }}else{
+                console.log("El id del producto y/o carrito es incorrecto");
+            }
+            let newCart = cartById
+            const findProdOnCart = cartById.products.find(prod=>prod.id==prodId)
+            console.log(findProdOnCart)
+           if (findProdOnCart == undefined) {
+                newCart.products.push(newProdToCart)
+                return await cartById.updateOne(newCart)
+            } else {
+                findProdOnCart.quantity++
+                let newProdToCart = {
+                    pid: prodId,
+                    quantity: findProdOnCart.quantity
+                }
+                const indexFindProdOnCart = cartById.products.indexOf(findProdOnCart)
+                cartById.products.splice(indexFindProdOnCart, 1)
+                newCart = cartById
+                newCart.products.push(newProdToCart)
+                return await cartById.updateOne(newCart)
+            }
+        } catch (error) {
+            return error
         }
-        const newCart = cartById
-        const findProdOnCart = cartById.products.find(prod=>prod.id===prodId)
-        if (findProdOnCart === undefined) {
-            newCart.products.push(newProdToCart)
-            return await cartById.updateOne(newCart)
-        } else {
-            newProdToCart.quantity++
-            const findQuant = cartById.products.find(prod=>prod.quantity===newProdToCart.quantity-1)
-            const indexQuantUpdate = cartById.products.indexOf(findQuant)
-            cartById.products.splice(indexQuantUpdate, 1)
-            newCart.products.push(newProdToCart)
-            return await cartById.updateOne(newCart)
-        }
-    } catch (error) {
-        return error
-    }
-    }
+        } */
+
+        async addProductToCart(cartId, prodId){
+            try {
+            const cartById = await cartsModel.findById(cartId)
+            const prodById = await productManager.getProductsById(prodId)
+
+            let newProdToCart = {
+                pid: prodId,
+                quantity: 1,
+                }
+
+            const findProdOnCart = cartById.products.find(prod=>prod.pid==prodId)
+
+            if (findProdOnCart == undefined) {
+                    let newCart = cartById
+                    newCart.products.push(newProdToCart)
+                    return await cartById.updateOne(newCart)
+                } else {
+                    findProdOnCart.quantity++
+                    let newProdToCart = {
+                        pid: prodId,
+                        quantity: findProdOnCart.quantity
+                    }
+                    const indexFindProdOnCart = cartById.products.indexOf(findProdOnCart)
+                    cartById.products.splice(indexFindProdOnCart, 1)
+                    let newCart = cartById
+                    newCart.products.push(newProdToCart)
+                    return await cartById.updateOne(newCart)
+                }
+            } catch (error) {
+                return console.log(error)
+            }
+            }
 
     async deleteCart(cartId){
         try {
-            const deleteProd = await cartsModel.deleteOne({_id:cartId})
-            return deleteProd
+            const cartById = await cartsModel.findById(cartId)
+            const productsLength = cartById.products.length
+            cartById.products.splice(0, productsLength)
+            cartById.save()
+            return cartById
         } catch (error) {
             return error
         }
