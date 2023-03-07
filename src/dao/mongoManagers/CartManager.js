@@ -15,8 +15,8 @@ export default class CartManager{
 
     async getCartsById(id){
         try {
-            const cartById = await cartsModel.findById(id)
-            return cartById
+            const cartById = await cartsModel.findOne({_id:id})
+            return cartById;
         } catch (error) {
             return error
         }
@@ -30,43 +30,6 @@ export default class CartManager{
             return error
         }
     }
-
-    /* async addProductToCart(cartId, prodId){
-        try {
-            const cartById = await cartsModel.findById(cartId)
-            const prodById = await productManager.getProductsById(prodId)
-            console.log(cartById)
-            console.log(prodById)
-           if(prodById){ 
-                let newProdToCart = {
-                pid: prodId,
-                quantity: 1
-            }}else{
-                console.log("El id del producto y/o carrito es incorrecto");
-            }
-            let newCart = cartById
-            const findProdOnCart = cartById.products.find(prod=>prod.id==prodId)
-            console.log(findProdOnCart)
-           if (findProdOnCart == undefined) {
-                newCart.products.push(newProdToCart)
-                return await cartById.updateOne(newCart)
-            } else {
-                findProdOnCart.quantity++
-                let newProdToCart = {
-                    pid: prodId,
-                    quantity: findProdOnCart.quantity
-                }
-                const indexFindProdOnCart = cartById.products.indexOf(findProdOnCart)
-                cartById.products.splice(indexFindProdOnCart, 1)
-                newCart = cartById
-                newCart.products.push(newProdToCart)
-                return await cartById.updateOne(newCart)
-            }
-        } catch (error) {
-            return error
-        }
-        } */
-
         async addProductToCart(cartId, prodId){
             try {
             const cartById = await cartsModel.findById(cartId)
