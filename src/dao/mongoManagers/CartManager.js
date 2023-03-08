@@ -13,10 +13,10 @@ export default class CartManager{
         }
     }
 
-    async getCartsById(id){
+    async getCartsById(cid){
         try {
-            const cartById = await cartsModel.findOne({_id:id})
-            return cartById;
+            const cartById = await cartsModel.findById(cid).populate('products.pid')
+            return cartById
         } catch (error) {
             return error
         }

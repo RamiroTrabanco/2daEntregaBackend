@@ -41,6 +41,6 @@ socketServer.on("connection",(socket)=>{
 
 /* views */
 app.use("/products/", viewProds)
-app.use("/cart", viewCart)
+app.use("/carts", viewCart)
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
