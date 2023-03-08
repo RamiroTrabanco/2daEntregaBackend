@@ -30,38 +30,38 @@ export default class CartManager{
             return error
         }
     }
-        async addProductToCart(cartId, prodId){
-            try {
-            const cartById = await cartsModel.findById(cartId)
-            const prodById = await productManager.getProductsById(prodId)
+    async addProductToCart(cartId, prodId){
+        try {
+        const cartById = await cartsModel.findById(cartId)
+        const prodById = await productManager.getProductsById(prodId)
 
-            let newProdToCart = {
-                pid: prodId,
-                quantity: 1,
-                }
-
-            const findProdOnCart = cartById.products.find(prod=>prod.pid==prodId)
-
-            if (findProdOnCart == undefined) {
-                    let newCart = cartById
-                    newCart.products.push(newProdToCart)
-                    return await cartById.updateOne(newCart)
-                } else {
-                    findProdOnCart.quantity++
-                    let newProdToCart = {
-                        pid: prodId,
-                        quantity: findProdOnCart.quantity
-                    }
-                    const indexFindProdOnCart = cartById.products.indexOf(findProdOnCart)
-                    cartById.products.splice(indexFindProdOnCart, 1)
-                    let newCart = cartById
-                    newCart.products.push(newProdToCart)
-                    return await cartById.updateOne(newCart)
-                }
-            } catch (error) {
-                return console.log(error)
+        let newProdToCart = {
+            pid: prodId,
+            quantity: 1,
             }
+
+        const findProdOnCart = cartById.products.find(prod=>prod.pid==prodId)
+
+        if (findProdOnCart == undefined) {
+                let newCart = cartById
+                newCart.products.push(newProdToCart)
+                return await cartById.updateOne(newCart)
+            } else {
+                findProdOnCart.quantity++
+                let newProdToCart = {
+                    pid: prodId,
+                    quantity: findProdOnCart.quantity
+                }
+                const indexFindProdOnCart = cartById.products.indexOf(findProdOnCart)
+                cartById.products.splice(indexFindProdOnCart, 1)
+                let newCart = cartById
+                newCart.products.push(newProdToCart)
+                return await cartById.updateOne(newCart)
             }
+        } catch (error) {
+            return console.log(error)
+        }
+        }
 
     async deleteCart(cartId){
         try {

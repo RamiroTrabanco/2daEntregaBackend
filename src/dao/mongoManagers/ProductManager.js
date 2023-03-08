@@ -44,6 +44,8 @@ export default class ProductManager{
     async getProductsById(id){
         try {
             const prodByIdDB = await productsModels.find({_id:id})
+            console.log(prodByIdDB)
+            console.log(id)
             return prodByIdDB
         } catch (error) {
             return error
